@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+
+    <head>
+        <title>Audio to Sign Language Translator</title>
+
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shoelace-css/1.0.0-beta16/shoelace.css"> -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+        <link rel = "stylesheet" href="../static/css/style.css" type="text/css"/>
+
+        <!-- <style>
+            body{
+                background-image: url("../static/images/bg.jpg");
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+        </style> -->
+
+
+
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+        <script type="text/javascript" src="data.json"></script>
+        <script src="C:\Users\Ankita\Desktop\Test Project\templates\data.jsonp"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('#speak_button').click(function(event) {
+                    $.getJSON('/speechConverter', { }, function(data) {
+
+                    });
+                    return false;
+                });
+            });
+            
+            function showVideo(){
+                var englishSentence = document.getElementById('english_sentence');
+                var islSentence = document.getElementById('isl_sentence');
+
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var myObj = JSON.parse(this.responseText);
+                        englishSentence.innerHTML = myObj.input;
+                        islSentence.innerHTML = myObj.output;
+                    }
+                };
+                xmlhttp.open("GET", "{{ url_for('static', filename='data.txt') }}", true);
+                xmlhttp.send();
+
+                var v = document.getElementById('idle_video');
+                v.setAttribute('src', "{{ url_for('static', filename='result.mp4') }}");
+                v.play();
+                // v.setAttribute('src', "{{ url_for('static', filename='isl.mp4') }}");
+                // v.play();
+            }
+
+            
+        </script> 
+    </head>
+
+    <body>       
+
+        <div id="title_section">
+            <h1 id="title"> Web App for Audio to Indian Sign Language Translation </h1>
+        </div>
+
+        <div id="main_section">
+
+            <div id="left_section">
+                <!-- <input type = "button" id = "speak_button" value = "Speak" /> <br>      
+                <input type = "button" id = "show_button" onclick="showVideo()" value = "Show Video" /> -->
+                <button id="speak_button"> Speak </button> <br>
+                <button id="show_button" onclick="showVideo()"> Show Video </button>
+            </div>
+
+            <div id="middle_section">
+                <video id="idle_video" width="640" height="420" autoplay muted >
+                    <source src="{{ url_for('static', filename='isl.mp4') }}" type="video/mp4" />
+                </video>
+                <!-- <video id="idle_video" width="640" height="420" autoplay muted >
+                    <source src="../static/isl.mp4" type="video/mp4" />
+                </video> -->
+            </div>
+
+            <div id="right_section">
+                <p id="english_label"> English Sentence: </p>
+                <p id="english_sentence"> </p>
+                <p id="isl_label"> ISL Sectence: </p>
+                <p id="isl_sentence"> </p>
+            </div>
+
+        </div>        
+        
+    </body>    
+
+</html>
